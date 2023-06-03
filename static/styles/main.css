@@ -1,0 +1,24 @@
+.text-green {
+    color: lightgreen;
+}
+
+.btn-outline-green {
+    --bs-btn-color: lightgreen;
+    --bs-btn-border-color: lightgreen;
+    --bs-btn-hover-color: darkgreen;
+    --bs-btn-hover-bg: lightgreen;
+    --bs-btn-hover-border-color: lightgreen;
+    --bs-btn-focus-shadow-rgb: 25, 135, 84;
+    --bs-btn-active-color: darkgreen;
+    --bs-btn-active-bg: lightgreen;
+    --bs-btn-active-border-color: lightgreen;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: lightgreen;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: lightgreen;
+    --bs-gradient: none
+}
+
+.nav-link:hover {
+    color: darkgreen;
+}
