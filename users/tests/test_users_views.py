@@ -18,7 +18,6 @@ def test_login_view_post(client, user):
     }
 
     redirect = client.post(url, data)
-
     response = client.get(redirect.url)
 
     assert redirect.status_code == 302
@@ -31,7 +30,6 @@ def test_logout_view(client, user):
     url = reverse('users:logout')
 
     redirect = client.get(url)
-
     response = client.get(redirect.url)
 
     assert redirect.status_code == 302
