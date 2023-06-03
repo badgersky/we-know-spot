@@ -23,3 +23,5 @@ def test_login_view_post(client, user):
 
     assert redirect.status_code == 302
     assert response.status_code == 200
+    assert 'Logged in (test_user)' in response.content.decode('utf-8')
+    
