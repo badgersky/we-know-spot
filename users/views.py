@@ -13,7 +13,7 @@ class LoginView(View):
         return render(request, 'users/login.html', {'form': form})
 
     def post(self, request):
-        form = LoginForm(request.POST)
+        form = LoginForm(request, request.POST)
 
         if form.is_valid():
             user = authenticate(
@@ -21,7 +21,8 @@ class LoginView(View):
                 password=form.cleaned_data.get('password')
             )
             if user is not None:
-                login(request, user)
-                return redirect(reverse('home:home'))
+                if user.is_active:
+                    login(request, user)
+                    return redirect(reverse('home:home'))
 
         return render(request, 'users/login.html', {'form': form})
