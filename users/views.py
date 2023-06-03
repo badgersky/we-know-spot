@@ -36,5 +36,5 @@ class LogoutView(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
 
     def get(self, request):
-        logout(request.user)
+        logout(request)
         return redirect(reverse('home:home'))
