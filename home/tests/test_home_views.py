@@ -8,4 +8,3 @@ def test_home_page(client):
 
     assert response.status_code == 200
     assert 'Home Page' in response.content.decode('utf-8')
-    
