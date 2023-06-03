@@ -24,4 +24,27 @@ def test_login_view_post(client, user):
     assert redirect.status_code == 302
     assert response.status_code == 200
     assert 'Logged in (test_user)' in response.content.decode('utf-8')
-    
+
+
+def test_logout_view(client, user):
+    client.force_login(user)
+    url = reverse('users:logout')
+
+    redirect = client.get(url)
+
+    response = client.get(redirect.url)
+
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert 'Login' in response.content.decode('utf-8')
+
+
+def test_logout_view_user_not_logged(client, user):
+    url = reverse('users:logout')
+
+    redirect = client.get(url)
+    response = client.get(redirect.url)
+
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert 'Login' in response.content.decode('utf-8')
