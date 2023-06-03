@@ -8,11 +8,14 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Login</h2>
-    <form action="" method="post">
+    <div class="row">
+        <h2 class="text-green">Login</h2>
+    </div>
+    <br>
+    <form action="" method="post" class="forms">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn-outline-green">Login</button>
+        <button type="submit" class="btn btn-outline-green">Login</button>
     </form>
 {% endblock %}
 
