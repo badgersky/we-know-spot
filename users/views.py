@@ -1,12 +1,14 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 
 from users.forms import LoginForm
 
 
 class LoginView(View):
+    """view for logging in"""
 
     def get(self, request):
         form = LoginForm()
@@ -26,3 +28,13 @@ class LoginView(View):
                     return redirect(reverse('home:home'))
 
         return render(request, 'users/login.html', {'form': form})
+
+
+class LogoutView(LoginRequiredMixin, View):
+    """view for logging out"""
+
+    login_url = reverse_lazy('users:login')
+
+    def get(self, request):
+        logout(request.user)
+        return redirect(reverse('home:home'))
