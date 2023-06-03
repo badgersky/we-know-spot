@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
 
+    # my apps
+    'home.apps.HomeConfig',
 ]
 
 MIDDLEWARE = [
