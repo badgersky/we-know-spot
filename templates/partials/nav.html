@@ -12,9 +12,15 @@
                 </li>
                 {% if not user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link text-green" href="{% url 'users:register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-green" href="{% url 'users:login' %}">Login</a>
                     </li>
                 {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-green" href="{% url 'spots:create' %}">Create Spot</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-green" href="{% url 'users:logout' %}">logout</a>
                     </li>
