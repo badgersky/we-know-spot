@@ -25,7 +25,7 @@ class Spot(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField('Tag')
     province = models.ForeignKey('Province', on_delete=models.CASCADE)
-    likes = models.IntegerField(validators=[MinValueValidator(0)])
+    likes = models.IntegerField(validators=[MinValueValidator(0)], default=0)
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=6)
