@@ -12,7 +12,7 @@
         <h2 class="text-green">Create Spot</h2>
     </div>
     <br>
-    <form action="" method="post" class="forms">
+    <form action="" method="post" class="forms" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-outline-green">Create</button>
