@@ -1,4 +1,7 @@
+from io import BytesIO
+
 import pytest
+from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from spots.models import Province, Tag
@@ -39,7 +42,9 @@ def tags():
 
 @pytest.fixture
 def photo():
-    """photo object"""
+    """temporary photo object"""
 
-    photo = SimpleUploadedFile('test.jpg', b'image')
-    return photo
+    bts = BytesIO()
+    img = Image.new("RGB", (100, 100))
+    img.save(bts, 'jpeg')
+    return SimpleUploadedFile("test.jpg", bts.getvalue())

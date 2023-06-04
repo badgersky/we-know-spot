@@ -16,9 +16,8 @@ class CreateSpotView(LoginRequiredMixin, CreateView):
     context_object_name = 'form'
 
     def form_valid(self, form):
-        spot = form.save(commit=False)
-        spot.user = self.request.user
-        return spot
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_login_url(self):
         messages.add_message(
@@ -27,4 +26,3 @@ class CreateSpotView(LoginRequiredMixin, CreateView):
             f'Login in order to create spot',
         )
         return super().get_login_url()
-    
