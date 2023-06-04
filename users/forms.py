@@ -13,12 +13,18 @@ class LoginForm(AuthenticationForm):
 
 
 class RegistrationForm(forms.ModelForm):
-    password = forms.PasswordInput(attrs={
-        'placeholder': 'password'
-    })
-    confirm_password = forms.PasswordInput(attrs={
-        'placeholder': 'confirm_password'
-    })
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'password'
+        })
+    )
+    confirm_password = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'confirm password'
+        })
+    )
 
     class Meta:
         model = get_user_model()
@@ -41,6 +47,8 @@ class RegistrationForm(forms.ModelForm):
         if get_user_model().objects.filter(username=username).exists():
             raise ValidationError(f'Try using different username')
 
+        return username
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data.get('password'))
@@ -49,4 +57,3 @@ class RegistrationForm(forms.ModelForm):
         if commit:
             super().save()
         return user
-    
