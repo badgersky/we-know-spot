@@ -1,6 +1,7 @@
 from django.contrib import admin
-from models import Tag, Province
-
+from spots.models import Tag, Province, SpotLike, Spot
 
 admin.site.register(Tag)
 admin.site.register(Province)
+admin.site.register(Spot)
+admin.site.register(SpotLike)
