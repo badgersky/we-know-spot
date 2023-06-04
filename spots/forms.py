@@ -12,6 +12,6 @@ class CreateSpotForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Spot()
+        model = Spot
         fields = ('name', 'province', 'longitude', 'latitude', 'tags', 'photo')
         
