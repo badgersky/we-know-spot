@@ -67,3 +67,27 @@ def test_create_spot_view_invalid_form(client, user, province, tags):
     assert response.status_code == 200
     assert num_of_spots == num_of_spots_after
     assert 'Create Spot' in response.content.decode('utf-8')
+
+
+def test_list_spot_view_no_spots(client, db):
+    url = reverse('spots:list')
+    num_of_spots = Spot.objects.count()
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert 'No Spots' in response.content.decode('utf-8')
+    assert num_of_spots == 0
+
+
+def test_list_spot_view(client, db, spots):
+    url = reverse('spots:list')
+    num_of_spots = Spot.objects.count()
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert 'No Spots' not in response.content.decode('utf-8')
+    assert num_of_spots == len(spots)
+    for spot in spots:
+        assert spot.name in response.content.decode('utf-8')
