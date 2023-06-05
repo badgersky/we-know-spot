@@ -45,6 +45,7 @@ def test_create_spot_view_post(client, user, province, tags, photo):
     assert redirect.status_code == 302
     assert response.status_code == 200
     assert num_of_spots == num_of_spots_after - 1
+    assert 'Spot created successfully' in response.content.decode('utf-8')
 
 
 def test_create_spot_view_invalid_form(client, user, province, tags):

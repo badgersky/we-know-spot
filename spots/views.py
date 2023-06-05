@@ -15,6 +15,14 @@ class CreateSpotView(LoginRequiredMixin, CreateView):
     template_name = 'spots/create-spot.html'
     success_url = reverse_lazy('home:home')
 
+    def get_success_url(self):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            f'Spot created successfully',
+        )
+        return super().get_success_url()
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
