@@ -4,7 +4,7 @@ import pytest
 from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from spots.models import Province, Tag
+from spots.models import Province, Tag, Spot
 
 
 @pytest.fixture
@@ -35,9 +35,13 @@ def province():
 def tags():
     """tags instances"""
 
-    for i in range(1, 6):
-        tag = Tag(tag_name=f'tag{i}')
-        yield tag
+    tags = []
+    for i in range(1, 4):
+        new_tag = Tag.objects.create(tag_name=f'test_tag{i}')
+        new_tag.save()
+        tags.append(new_tag)
+
+    return tags
 
 
 @pytest.fixture
@@ -48,3 +52,24 @@ def photo():
     img = Image.new("RGB", (100, 100))
     img.save(bts, 'jpeg')
     return SimpleUploadedFile("test.jpg", bts.getvalue())
+
+
+@pytest.fixture
+def spots(province, tags, photo, user):
+    """temporary spots"""
+
+    spots = []
+    for i in range(1, 6):
+        new_spot = Spot.objects.create(
+            name=f'spot{1}',
+            province=province,
+            longitude=20.000000,
+            latitude=50.000000,
+            photo=photo,
+            user=user
+        )
+        new_spot.tags.set(tags)
+        new_spot.save()
+        spots.append(new_spot)
+
+    return spots

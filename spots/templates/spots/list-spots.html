@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+    Spot List
+{% endblock %}
+
+{% block content %}
+    {% for spot in spots %}
+        <div class="card border-green mb-3 bg-dark">
+            <img src="{{ spot.photo.url }}" class="card-img-top" alt="spot photo">
+            <div class="card-body text-green border-top-green">
+                <h5 class="card-title">{{ spot.name }}</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark text-green border-bottom-green">
+                    Province: {{ spot.province }}
+                </li>
+                <li class="list-group-item bg-dark text-green border-bottom-green">
+                    Latitude: {{ spot.latitude }}
+                </li>
+                <li class="list-group-item bg-dark text-green">
+                    Longitude: {{ spot.longitude }}
+                </li>
+            </ul>
+            <div class="card-body bg-dark text-green">
+                <a href="https://maps.google.com/?q={{ spot.latitude }}, {{ spot.longitude }}"
+                   class="nav-link text-green">
+                    Search on Google Maps
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="row">
+            <h2 class="text-green">No Spots</h2>
+        </div>
+    {% endfor %}
+{% endblock %}

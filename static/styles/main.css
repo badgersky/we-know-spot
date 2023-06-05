@@ -26,3 +26,16 @@
 .forms {
     color: lightgreen;
 }
+
+.border-green {
+    --bs-border-opacity: 1;
+    border-color: lightgreen;
+}
+
+.border-bottom-green {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) lightgreen !important
+}
+
+.border-top-green {
+    border-top: var(--bs-border-width) var(--bs-border-style) lightgreen !important
+}
