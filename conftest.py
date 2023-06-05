@@ -40,6 +40,7 @@ def tags():
         new_tag = Tag.objects.create(tag_name=f'test_tag{i}')
         new_tag.save()
         tags.append(new_tag)
+
     return tags
 
 
