@@ -3,17 +3,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from spots.forms import CreateSpotForm
+from spots.models import Spot
 
 
 class CreateSpotView(LoginRequiredMixin, CreateView):
     """view for adding spot to database"""
 
+    model = Spot
     login_url = reverse_lazy('users:login')
-    form_class = CreateSpotForm
+    fields = ('name', 'province', 'longitude', 'latitude', 'tags', 'photo')
     template_name = 'spots/create-spot.html'
     success_url = reverse_lazy('home:home')
-    context_object_name = 'form'
 
     def form_valid(self, form):
         form.instance.user = self.request.user

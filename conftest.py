@@ -35,9 +35,12 @@ def province():
 def tags():
     """tags instances"""
 
-    for i in range(1, 6):
-        tag = Tag(tag_name=f'tag{i}')
-        yield tag
+    tags = []
+    for i in range(1, 4):
+        new_tag = Tag.objects.create(tag_name=f'test_tag{i}')
+        new_tag.save()
+        tags.append(new_tag)
+    return tags
 
 
 @pytest.fixture
