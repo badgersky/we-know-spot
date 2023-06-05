@@ -9,23 +9,29 @@
 
 {% block content %}
     {% for spot in spots %}
-        <div class="card" style="width: 20rem;">
-            <img src="{{ spot.photo.url}}" class="card-img-top" alt="spot photo">
-            <div class="card-body">
+        <div class="card border-green mb-3 bg-dark" style="max-width: 18rem;">
+            <img src="{{ spot.photo.url }}" class="card-img-top" alt="spot photo">
+            <div class="card-body text-green border-top-green">
                 <h5 class="card-title">{{ spot.name }}</h5>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Province: {{ spot.province }}</li>
-                <li class="list-group-item">Longitude: {{ spot.longitude }}</li>
-                <li class="list-group-item">latitude: {{ spot.latitude }}</li>
+                <li class="list-group-item bg-dark text-green border-bottom-green">
+                    Province: {{ spot.province }}
+                </li>
+                <li class="list-group-item bg-dark text-green border-bottom-green">
+                    Latitude: {{ spot.latitude }}
+                </li>
+                <li class="list-group-item bg-dark text-green">
+                    Longitude: {{ spot.longitude }}
+                </li>
             </ul>
-            <div class="card-body">
-                <a href="https://www.google.com/maps/@{{ spot.latitude }}, {{ spot.longitude }}" class="card-link">
-                    Search in Google Maps
+            <div class="card-body bg-dark text-green">
+                <a href="https://maps.google.com/?q={{ spot.latitude }}, {{ spot.longitude }}" class="text-green">
+                    Search on Google Maps
                 </a>
             </div>
         </div>
     {% empty %}
-        <h2 class="text-green">No spots</h2>
+        <h2 class="test-green">No Spots</h2>
     {% endfor %}
 {% endblock %}
