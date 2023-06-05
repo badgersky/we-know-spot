@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from spots.models import Spot
 
@@ -34,3 +34,12 @@ class CreateSpotView(LoginRequiredMixin, CreateView):
             f'Login in order to create spot',
         )
         return super().get_login_url()
+
+
+class ListSpotsView(ListView):
+    """lists all created spots"""
+
+    model = Spot
+    template_name = 'spots/list-spots.html'
+    context_object_name = 'spots'
+    paginate_by = 20
