@@ -45,3 +45,24 @@ def test_create_spot_view_post(client, user, province, tags, photo):
     assert redirect.status_code == 302
     assert response.status_code == 200
     assert num_of_spots == num_of_spots_after - 1
+
+
+def test_create_spot_view_invalid_form(client, user, province, tags):
+    url = reverse('spots:create')
+    client.force_login(user)
+    data = {
+        'name': 'test-spot',
+        'province': str(province.pk),
+        'longitude': 19.489387,
+        'latitude': 49.789646,
+        'tags': [str(tag.pk) for tag in tags],
+        'photo': '',
+    }
+    num_of_spots = Spot.objects.count()
+
+    response = client.post(url, data)
+    num_of_spots_after = Spot.objects.count()
+
+    assert response.status_code == 200
+    assert num_of_spots == num_of_spots_after
+    assert 'Create Spot' in response.content.decode('utf-8')
