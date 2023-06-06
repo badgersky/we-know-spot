@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from spots.models import Spot
+from spots.models import Spot, SpotLike
 
 
 def test_create_spot_view_get(client, user):
@@ -91,3 +91,17 @@ def test_list_spot_view(client, db, spots):
     assert num_of_spots == len(spots)
     for spot in spots:
         assert spot.name in response.content.decode('utf-8')
+
+
+def test_like_spot_view(client, db, user, spots):
+    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
+    client.force_login(user)
+    likes = Spot.objects.get(pk=spots[0].pk).likes
+
+    redirect = client.get(url)
+    response = client.get(redirect.url)
+    likes_after = Spot.objects.get(pk=spots[0].pk).likes
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert likes == likes_after - 1
+    assert SpotLike.objects.filter(user=user, spot=spots[0]).exists() is True

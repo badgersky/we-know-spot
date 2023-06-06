@@ -67,6 +67,8 @@ class LikeSpot(LoginRequiredMixin, View):
             return redirect(reverse('spots:list'))
 
         SpotLike.objects.create(user=request.user, spot=spot)
+        spot.likes += 1
+        spot.save()
         return redirect(reverse('spots:list'))
 
 
@@ -77,5 +79,7 @@ class DislikeSpot(LoginRequiredMixin, View):
         spot = Spot.objects.get(pk=pk)
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
+            spot.likes -= 1
+            spot.save()
 
         return redirect(reverse('spots:list'))
