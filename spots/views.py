@@ -60,6 +60,7 @@ class ListSpotsView(ListView):
 
 class LikeSpot(LoginRequiredMixin, View):
     """view for liking spot"""
+    login_url = reverse_lazy('users:login')
 
     def get(self, request, pk):
         spot = Spot.objects.get(pk=pk)
@@ -74,6 +75,7 @@ class LikeSpot(LoginRequiredMixin, View):
 
 class DislikeSpot(LoginRequiredMixin, View):
     """view for disliking spot"""
+    login_url = reverse_lazy('users:login')
 
     def get(self, request, pk):
         spot = Spot.objects.get(pk=pk)
