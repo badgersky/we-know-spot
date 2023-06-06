@@ -48,18 +48,13 @@ class ListSpotsView(ListView):
     paginate_by = 20
 
 
-class LikeSpot(LoginRequiredMixin, OwnerRequiredMixin, View):
+class LikeSpot(LoginRequiredMixin, View):
     """view for liking spot"""
 
     def get(self, request, pk):
-        spot = Spot.objects.get(pk=pk)
-        return render(request, 'spots/like-spot.html', {'spot': spot})
-
-    def post(self, request, pk):
         spot = Spot.objects.get(pk=pk)
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             return redirect(reverse('spots:list'))
 
         SpotLike.objects.create(user=request.user, spot=spot)
         return redirect(reverse('spots:list'))
-    
