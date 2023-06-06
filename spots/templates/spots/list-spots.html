@@ -13,7 +13,7 @@
             <img src="{{ spot.photo.url }}" class="card-img-top" alt="spot photo">
             <div class="card-body text-green border-top-green">
                 <h5 class="card-title">{{ spot.name }}</h5>
-                <a href=""><img src="{% static 'images/empty-heart.png' %}" alt="heart" height="40" width="40"></a>
+                <a href="{% url 'spots:like' %}"><img src="{% static 'images/empty-heart.png' %}" alt="heart" height="40" width="40"></a>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item bg-dark text-green border-bottom-green">
