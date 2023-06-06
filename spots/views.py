@@ -47,6 +47,16 @@ class ListSpotsView(ListView):
     context_object_name = 'spots'
     paginate_by = 20
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        liked_spots = []
+        for spot in context['spots']:
+            if self.request.user.is_authenticated:
+                if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
+                    liked_spots.append(spot.pk)
+        context['liked_spots'] = liked_spots
+        return context
+
 
 class LikeSpot(LoginRequiredMixin, View):
     """view for liking spot"""
