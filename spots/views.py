@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic import CreateView, ListView
 
-from spots.models import Spot
+from spots.models import Spot, SpotLike
+from spots.permissions import OwnerRequiredMixin
 
 
 class CreateSpotView(LoginRequiredMixin, CreateView):
@@ -43,3 +46,42 @@ class ListSpotsView(ListView):
     template_name = 'spots/list-spots.html'
     context_object_name = 'spots'
     paginate_by = 20
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        liked_spots = []
+        for spot in context['spots']:
+            if self.request.user.is_authenticated:
+                if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
+                    liked_spots.append(spot.pk)
+        context['liked_spots'] = liked_spots
+        return context
+
+
+class LikeSpot(LoginRequiredMixin, View):
+    """view for liking spot"""
+    login_url = reverse_lazy('users:login')
+
+    def get(self, request, pk):
+        spot = Spot.objects.get(pk=pk)
+        if SpotLike.objects.filter(user=request.user, spot=spot).exists():
+            return redirect(reverse('spots:list'))
+
+        SpotLike.objects.create(user=request.user, spot=spot)
+        spot.likes += 1
+        spot.save()
+        return redirect(reverse('spots:list'))
+
+
+class DislikeSpot(LoginRequiredMixin, View):
+    """view for disliking spot"""
+    login_url = reverse_lazy('users:login')
+
+    def get(self, request, pk):
+        spot = Spot.objects.get(pk=pk)
+        if SpotLike.objects.filter(user=request.user, spot=spot).exists():
+            SpotLike.objects.get(user=request.user, spot=spot).delete()
+            spot.likes -= 1
+            spot.save()
+
+        return redirect(reverse('spots:list'))

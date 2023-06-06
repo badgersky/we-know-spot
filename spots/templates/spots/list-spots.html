@@ -13,6 +13,17 @@
             <img src="{{ spot.photo.url }}" class="card-img-top" alt="spot photo">
             <div class="card-body text-green border-top-green">
                 <h5 class="card-title">{{ spot.name }}</h5>
+                {% if user.is_authenticated %}
+                    {% if spot.pk in liked_spots %}
+                        <a href="{% url 'spots:dislike' pk=spot.pk %}">
+                            <img src="{% static 'images/heasrt2.png' %}" alt="heart" height="40" width="40">
+                        </a>
+                    {% else %}
+                        <a href="{% url 'spots:like' pk=spot.pk %}">
+                            <img src="{% static 'images/empty-heart.png' %}" alt="heart" height="40" width="40">
+                        </a>
+                    {% endif %}
+                {% endif %}
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item bg-dark text-green border-bottom-green">
