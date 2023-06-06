@@ -151,5 +151,3 @@ def test_dislike_spot_view_no_permission(client, db, spots):
     assert response.status_code == 200
     assert likes == likes_after
     assert 'Login' in response.content.decode('utf-8')
-
-
