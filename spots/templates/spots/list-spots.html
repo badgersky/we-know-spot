@@ -15,7 +15,7 @@
                 <h5 class="card-title">{{ spot.name }}</h5>
                 {% if user.is_authenticated %}
                     {% if spot.pk in liked_spots %}
-                        <a href="{% url 'spots:like' pk=spot.pk %}">
+                        <a href="{% url 'spots:dislike' pk=spot.pk %}">
                             <img src="{% static 'images/heasrt2.png' %}" alt="heart" height="40" width="40">
                         </a>
                     {% else %}
