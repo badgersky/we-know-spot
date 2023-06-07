@@ -9,4 +9,5 @@ urlpatterns = [
     path('list/', views.ListSpotsView.as_view(), name='list'),
     path('like/<pk>/', views.LikeSpot.as_view(), name='like'),
     path('dislike/<pk>/', views.DislikeSpot.as_view(), name='dislike'),
+    path('search/', views.SearchSpot.as_view(), name='search'),
 ]

@@ -93,6 +93,13 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
-        spots = Spot.objects.filter(tags__in=tag)
-        print(spots)
-        return redirect(reverse('home:home', kwargs={'spots': spots}))
+        context = {
+            'spots': Spot.objects.filter(tags__tag_name=tag),
+            'liked_spots': [],
+        }
+        if request.user.is_authenticated:
+            for spot in context['spots']:
+                if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
+                    context['liked_spots'].append(spot.pk)
+
+        return render(request, 'spots/list-spots.html', context)
