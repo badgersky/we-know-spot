@@ -42,6 +42,13 @@
                     Search on Google Maps
                 </a>
             </div>
+            {% if user.is_authenticated %}
+                {% if user == spot.user or user.is_superuser %}
+                    <div class="card-body bg-dark border-top-green">
+                        <a href="{% url 'spots:delete' pk=spot.pk %}" class="btn btn-danger">Delete</a>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
     {% empty %}
         <div class="row">

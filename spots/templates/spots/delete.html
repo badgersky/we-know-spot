@@ -8,9 +8,11 @@
 {% endblock %}
 
 {% block content %}
+    <h2 class="text-green">Are you sure you want to delete this post?</h2>
+    <br>
     <form action="" method="post">
         {% csrf_token %}
-        <a href="{% url 'spots:list' %}" class="btn btn-success">Cancel</a>
-        <button class="btn btn-danger">Confirm</button>
+        <a href="{% url 'spots:list' %}" class="btn btn-success me-2">Cancel</a>
+        <button class="btn btn-danger ms-2" type="submit">Confirm</button>
     </form>
 {% endblock %}
