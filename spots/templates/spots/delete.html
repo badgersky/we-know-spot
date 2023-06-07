@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+    Delete
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <a href="{% url 'spots:list' %}" class="btn btn-success">Cancel</a>
+        <button class="btn btn-danger">Confirm</button>
+    </form>
+{% endblock %}
