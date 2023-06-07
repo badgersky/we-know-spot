@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DeleteView
 
 from spots.models import Spot, SpotLike
 from spots.permissions import OwnerRequiredMixin
@@ -93,6 +94,22 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
-        spots = Spot.objects.filter(tags__in=tag)
-        print(spots)
-        return redirect(reverse('home:home', kwargs={'spots': spots}))
+        context = {
+            'spots': set(Spot.objects.filter(Q(tags__tag_name=tag) | Q(province__province_name=tag) | Q(name=tag))),
+            'liked_spots': [],
+        }
+        if request.user.is_authenticated:
+            for spot in context['spots']:
+                if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
+                    context['liked_spots'].append(spot.pk)
+
+        return render(request, 'spots/list-spots.html', context)
+
+
+class DeleteSpotView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
+    """view for deleting spot"""
+
+    model = Spot
+    template_name = 'spots/delete.html'
+    context_object_name = 'spot'
+    success_url = reverse_lazy('spots:list')
