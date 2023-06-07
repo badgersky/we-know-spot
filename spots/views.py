@@ -85,3 +85,14 @@ class DislikeSpot(LoginRequiredMixin, View):
             spot.save()
 
         return redirect(reverse('spots:list'))
+
+
+class SearchSpot(View):
+    """view for searching spots"""
+
+    def post(self, request):
+        tag = request.POST.get('search')
+
+        spots = Spot.objects.filter(tags__in=tag)
+        print(spots)
+        return redirect(reverse('home:home', kwargs={'spots': spots}))
