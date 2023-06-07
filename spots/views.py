@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DeleteView
 
 from spots.models import Spot, SpotLike
 from spots.permissions import OwnerRequiredMixin
@@ -104,3 +104,12 @@ class SearchSpot(View):
                     context['liked_spots'].append(spot.pk)
 
         return render(request, 'spots/list-spots.html', context)
+
+
+class DeleteSpotView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
+    """view for deleting spot"""
+
+    model = Spot
+    template_name = 'spots/delete.html'
+    context_object_name = 'spot'
+    success_url = reverse_lazy('spots:list')
