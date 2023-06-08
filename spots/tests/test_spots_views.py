@@ -176,3 +176,34 @@ def test_delete_spot_post(client, db, spots, user):
     assert redirect.status_code == 302
     assert response.status_code == 200
     assert num_of_spots == num_of_spots_after + 1
+
+
+def test_delete_spot_user_not_logged_in(client, db, spots):
+    url = reverse('spots:delete', kwargs={'pk': spots[0].pk})
+
+    redirect = client.get(url)
+    response = client.get(redirect.url)
+
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert 'Login' in response.content.decode('utf-8')
+
+
+def test_delete_spot_no_permission_get(client, db, spots, user2):
+    url = reverse('spots:delete', kwargs={'pk': spots[0].pk})
+    client.force_login(user2)
+
+    response = client.get(url)
+
+    assert response.status_code == 403
+    assert '403 Forbidden' in response.content.decode('utf-8')
+
+
+def test_delete_spot_no_permission_post(client, db, spots, user2):
+    url = reverse('spots:delete', kwargs={'pk': spots[0].pk})
+    client.force_login(user2)
+
+    response = client.post(url)
+
+    assert response.status_code == 403
+    assert '403 Forbidden' in response.content.decode('utf-8')

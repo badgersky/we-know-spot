@@ -113,3 +113,4 @@ class DeleteSpotView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     template_name = 'spots/delete.html'
     context_object_name = 'spot'
     success_url = reverse_lazy('spots:list')
+    login_url = reverse_lazy('users:login')

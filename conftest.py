@@ -20,6 +20,18 @@ def user(django_user_model):
 
 
 @pytest.fixture
+def user2(django_user_model):
+    """second user instance"""
+
+    user2 = django_user_model.objects.create_user(
+        username='test_user2',
+        password='test_pass2',
+    )
+
+    return user2
+
+
+@pytest.fixture
 def province():
     """province instance"""
 
