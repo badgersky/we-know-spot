@@ -35,6 +35,9 @@ class Spot(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('-date_add', '-likes',)
+        
 
 class SpotLike(models.Model):
     spot = models.ForeignKey('Spot', on_delete=models.CASCADE)
