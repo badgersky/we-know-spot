@@ -162,3 +162,17 @@ def test_delete_spot_get(client, db, spots, user):
 
     assert response.status_code == 200
     assert 'Are you sure you want to delete this spot?' in response.content.decode('utf-8')
+
+
+def test_delete_spot_post(client, db, spots, user):
+    url = reverse('spots:delete', kwargs={'pk': spots[0].pk})
+    client.force_login(user)
+    num_of_spots = Spot.objects.count()
+
+    redirect = client.post(url)
+    response = client.get(redirect.url)
+    num_of_spots_after = Spot.objects.count()
+
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert num_of_spots == num_of_spots_after + 1
