@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, ListView, DeleteView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
 from spots.models import Spot, SpotLike
 from spots.permissions import OwnerRequiredMixin
@@ -112,5 +112,15 @@ class DeleteSpotView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     model = Spot
     template_name = 'spots/delete.html'
     context_object_name = 'spot'
+    success_url = reverse_lazy('spots:list')
+    login_url = reverse_lazy('users:login')
+
+
+class UpdateSpotView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
+    """view for updating spot"""
+
+    model = Spot
+    template_name = 'spots/update.html'
+    context_object_name = 'form'
     success_url = reverse_lazy('spots:list')
     login_url = reverse_lazy('users:login')
