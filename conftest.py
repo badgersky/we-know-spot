@@ -61,7 +61,7 @@ def spots(province, tags, photo, user):
     spots = []
     for i in range(1, 6):
         new_spot = Spot.objects.create(
-            name=f'spot{1}',
+            name=f'spot{i}',
             province=province,
             longitude=20.000000,
             latitude=50.000000,

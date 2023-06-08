@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from django.urls import reverse
 
 from spots.models import Spot, SpotLike
@@ -151,3 +152,13 @@ def test_dislike_spot_view_no_permission(client, db, spots):
     assert response.status_code == 200
     assert likes == likes_after
     assert 'Login' in response.content.decode('utf-8')
+
+
+def test_delete_spot_get(client, db, spots, user):
+    url = reverse('spots:delete', kwargs={'pk': spots[0].pk})
+    client.force_login(user)
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert 'Are you sure you want to delete this spot?' in response.content.decode('utf-8')

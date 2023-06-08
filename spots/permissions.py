@@ -6,6 +6,6 @@ class OwnerRequiredMixin(AccessMixin):
 
     def dispatch(self, request, *args, **kwargs):
         spot = self.get_queryset().get(pk=kwargs.get('pk'))
-        if request.user != spot.user or not request.user.is_superuser:
+        if request.user != spot.user and not request.user.is_superuser:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
