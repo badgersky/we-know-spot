@@ -28,7 +28,6 @@ def test_create_spot_view_no_permission(client):
 def test_create_spot_view_post(client, user, province, tags, photo):
     url = reverse('spots:create')
     client.force_login(user)
-    print([str(tag.pk) for tag in tags])
     data = {
         'name': 'test-spot',
         'province': str(province.pk),
@@ -207,3 +206,40 @@ def test_delete_spot_no_permission_post(client, db, spots, user2):
 
     assert response.status_code == 403
     assert '403 Forbidden' in response.content.decode('utf-8')
+
+
+def test_update_spot_view_get(client, db, spots, user):
+    url = reverse('spots:update', kwargs={'pk': spots[0].pk})
+    client.force_login(user)
+
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert 'Update Spot' in response.content.decode('utf-8')
+    assert f'{spots[0].name}' in response.content.decode('utf-8')
+
+
+def test_update_spot_view_post(client, db, spots, user, province, tags):
+    url = reverse('spots:update', kwargs={'pk': spots[0].pk})
+    client.force_login(user)
+    data = {
+        'name': 'updated',
+        'longitude': 20.000000,
+        'latitude': 10.000000,
+        'province': str(province.pk),
+        'tags': [str(tag.pk) for tag in tags],
+        'photo': spots[0].photo
+    }
+    spot = spots[0]
+    pk = spot.pk
+
+    redirect = client.post(url, data)
+    response = client.get(redirect.url)
+    spot_after = Spot.objects.get(pk=pk)
+
+    assert redirect.status_code == 302
+    assert response.status_code == 200
+    assert spot_after.name == data['name']
+    assert spot_after.longitude == data['longitude']
+    assert spot_after.latitude == data['latitude']
+    assert spot_after.province == spot.province
