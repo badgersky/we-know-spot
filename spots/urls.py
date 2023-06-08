@@ -11,4 +11,5 @@ urlpatterns = [
     path('dislike/<pk>/', views.DislikeSpot.as_view(), name='dislike'),
     path('search/', views.SearchSpot.as_view(), name='search'),
     path('delete/<pk>/', views.DeleteSpotView.as_view(), name='delete'),
+    path('update/<pk>/', views.UpdateSpotView.as_view(), name='update'),
 ]

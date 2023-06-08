@@ -20,6 +20,18 @@ def user(django_user_model):
 
 
 @pytest.fixture
+def user2(django_user_model):
+    """second user instance"""
+
+    user2 = django_user_model.objects.create_user(
+        username='test_user2',
+        password='test_pass2',
+    )
+
+    return user2
+
+
+@pytest.fixture
 def province():
     """province instance"""
 
@@ -61,7 +73,7 @@ def spots(province, tags, photo, user):
     spots = []
     for i in range(1, 6):
         new_spot = Spot.objects.create(
-            name=f'spot{1}',
+            name=f'spot{i}',
             province=province,
             longitude=20.000000,
             latitude=50.000000,

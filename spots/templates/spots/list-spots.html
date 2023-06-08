@@ -45,6 +45,9 @@
             {% if user.is_authenticated %}
                 {% if user == spot.user or user.is_superuser %}
                     <div class="card-body bg-dark border-top-green">
+                        <a href="{% url 'spots:update' pk=spot.pk %}" class="btn btn-outline-green">Update</a>
+                    </div>
+                    <div class="card-body bg-dark border-top-green">
                         <a href="{% url 'spots:delete' pk=spot.pk %}" class="btn btn-danger">Delete</a>
                     </div>
                 {% endif %}
