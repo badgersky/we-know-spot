@@ -121,6 +121,7 @@ class UpdateSpotView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
 
     model = Spot
     template_name = 'spots/update.html'
+    fields = ('name', 'province', 'longitude', 'latitude', 'tags', 'photo')
     context_object_name = 'form'
     success_url = reverse_lazy('spots:list')
     login_url = reverse_lazy('users:login')
