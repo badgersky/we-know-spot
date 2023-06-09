@@ -95,7 +95,10 @@ class SearchSpot(View):
         tag = request.POST.get('search')
 
         context = {
-            'spots': set(Spot.objects.filter(Q(tags__tag_name=tag) | Q(province__province_name=tag) | Q(name=tag))),
+            'spots': set(Spot.objects.filter(
+                Q(tags__tag_name__contains=tag) |
+                Q(province__province_name__contains=tag) |
+                Q(name__contains=tag))),
             'liked_spots': [],
         }
         if request.user.is_authenticated:
