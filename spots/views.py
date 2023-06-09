@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, F
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -64,15 +65,14 @@ class LikeSpot(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
 
     def get(self, request, pk):
-        spot = Spot.objects.get(pk=pk)
+        spot = get_object_or_404(Spot, pk=pk)
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
             spot.likes = F('likes') - 1
-            spot.save()
         else:
             SpotLike.objects.create(user=request.user, spot=spot)
             spot.likes = F('likes') + 1
-            spot.save()
+        spot.save()
         return redirect(reverse('spots:list'))
 
 
