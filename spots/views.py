@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, F
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -69,7 +69,7 @@ class LikeSpot(LoginRequiredMixin, View):
             return redirect(reverse('spots:list'))
 
         SpotLike.objects.create(user=request.user, spot=spot)
-        spot.likes += 1
+        spot.likes = F('likes') + 1
         spot.save()
         return redirect(reverse('spots:list'))
 
@@ -82,7 +82,7 @@ class DislikeSpot(LoginRequiredMixin, View):
         spot = Spot.objects.get(pk=pk)
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
-            spot.likes -= 1
+            spot.likes = F('likes') - 1
             spot.save()
 
         return redirect(reverse('spots:list'))
