@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, F
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -72,6 +72,7 @@ class LikeSpot(LoginRequiredMixin, View):
         else:
             SpotLike.objects.create(user=request.user, spot=spot)
             spot.likes = F('likes') + 1
+            
         spot.save()
         return redirect(reverse('spots:list'))
 
