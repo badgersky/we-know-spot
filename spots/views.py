@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.db.models import Q, F
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -64,27 +65,15 @@ class LikeSpot(LoginRequiredMixin, View):
     login_url = reverse_lazy('users:login')
 
     def get(self, request, pk):
-        spot = Spot.objects.get(pk=pk)
-        if SpotLike.objects.filter(user=request.user, spot=spot).exists():
-            return redirect(reverse('spots:list'))
-
-        SpotLike.objects.create(user=request.user, spot=spot)
-        spot.likes += 1
-        spot.save()
-        return redirect(reverse('spots:list'))
-
-
-class DislikeSpot(LoginRequiredMixin, View):
-    """view for disliking spot"""
-    login_url = reverse_lazy('users:login')
-
-    def get(self, request, pk):
-        spot = Spot.objects.get(pk=pk)
+        spot = get_object_or_404(Spot, pk=pk)
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
-            spot.likes -= 1
-            spot.save()
-
+            spot.likes = F('likes') - 1
+        else:
+            SpotLike.objects.create(user=request.user, spot=spot)
+            spot.likes = F('likes') + 1
+            
+        spot.save()
         return redirect(reverse('spots:list'))
 
 
@@ -95,7 +84,10 @@ class SearchSpot(View):
         tag = request.POST.get('search')
 
         context = {
-            'spots': set(Spot.objects.filter(Q(tags__tag_name=tag) | Q(province__province_name=tag) | Q(name=tag))),
+            'spots': set(Spot.objects.filter(
+                Q(tags__tag_name__contains=tag) |
+                Q(province__province_name__contains=tag) |
+                Q(name__contains=tag))),
             'liked_spots': [],
         }
         if request.user.is_authenticated:

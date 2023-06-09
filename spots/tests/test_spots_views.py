@@ -109,7 +109,7 @@ def test_like_spot_view(client, db, user, spots):
 
 
 def test_dislike_spot_view(client, db, user, spots):
-    url = reverse('spots:dislike', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
     spots[0].likes = 1
     SpotLike.objects.create(user=user, spot=spots[0])
     client.force_login(user)
@@ -140,7 +140,7 @@ def test_like_spot_view_no_permission(client, db, spots):
 
 
 def test_dislike_spot_view_no_permission(client, db, spots):
-    url = reverse('spots:dislike', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
     likes = Spot.objects.get(pk=spots[0].pk).likes
 
     redirect = client.get(url)

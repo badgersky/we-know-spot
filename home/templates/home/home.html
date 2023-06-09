@@ -8,5 +8,84 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Home Page</h1>
+    {% if not user.is_authenticated %}
+        <div class="row">
+            <div class="col-6">
+                <div class="card border-green bg-dark">
+                    <div class="card-header">
+                        <h4 class="text-green">Register</h4>
+                    </div>
+                    <div class="card-body border-top-green text-green">
+                        <a href="{% url 'users:register' %}" class="btn btn-outline-green">Register</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card border-green bg-dark">
+                    <div class="card-header">
+                        <h4 class="text-green">Login</h4>
+                    </div>
+                    <div class="card-body border-top-green text-green">
+                        <a href="{% url 'users:login' %}" class="btn btn-outline-green">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    {% endif %}
+    <div class="card border-green bg-dark mt-5">
+        <div class="card-header">
+            <h2 class="text-green">About</h2>
+        </div>
+        <div class="card-body border-top-green text-green">
+            This app is for travelers making theirs journeys around Poland. Here you can find beautiful spots to
+            take a break or just to sit down and enjoy the view.
+        </div>
+    </div>
+    <br>
+    <div class="row mt-5">
+        <div class="col-6">
+            <div class="card border-green bg-dark">
+                <div class="card-header">
+                    <h4 class="text-green">Created Spots:</h4>
+                </div>
+                <div class="card-body border-top-green text-green">
+                    {{ spots_num }}
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card border-green bg-dark">
+                <div class="card-header">
+                    <h4 class="text-green">Registered Users:</h4>
+                </div>
+                <div class="card-body border-top-green text-green">
+                    {{ user_num }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row mt-5">
+        <div class="col-6">
+            <div class="card border-green bg-dark">
+                <div class="card-header">
+                    <h4 class="text-green">See Created Spots</h4>
+                </div>
+                <div class="card-body border-top-green text-green">
+                    <a href="{% url 'spots:list' %}" class="btn btn-outline-green">List of Spots</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card border-green bg-dark">
+                <div class="card-header">
+                    <h4 class="text-green">Create New Spot</h4>
+                </div>
+                <div class="card-body border-top-green text-green">
+                    <a href="{% url 'spots:create' %}" class="btn btn-outline-green">Create Spot</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
