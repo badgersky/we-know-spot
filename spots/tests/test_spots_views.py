@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Permission
 from django.urls import reverse
 
 from spots.models import Spot, SpotLike
