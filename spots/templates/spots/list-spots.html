@@ -16,13 +16,8 @@
                 {% if user.is_authenticated %}
                     <span id="counter{{ spot.pk }}" class="text-green">{{ spot.likes }}</span>
                     <button class="btn" id="like-btn{{ spot.pk }}" value="{{ spot.pk }}">
-                        {% if spot.pk in liked_spots %}
-                            <img src="{% static 'images/full-heart.png' %}" id="heart{{ spot.pk }}"
-                                 alt="heart" height="40" width="40">
-                        {% else %}
-                            <img src="{% static 'images/empty-heart.png' %}" id="heart{{ spot.pk }}"
-                                 alt="heart" height="40" width="40">
-                        {% endif %}
+                        <img src="{% static 'images/empty-heart.png' %}" id="heart{{ spot.pk }}"
+                             alt="heart" height="40" width="40">
                     </button>
                 {% endif %}
             </div>
@@ -66,29 +61,11 @@
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                         action: 'post',
                     },
-                    success: function(json) {
-                        const likeBtn = document.getElementById('like-btn{{ spot.pk }}')
-                        const currImg = document.getElementById('heart{{ spot.pk }}')
+                    success: function (json) {
                         const like_counter = document.getElementById('counter{{ spot.pk }}')
-                        likeBtn.removeChild(currImg)
-
-                        const result = json['result']
-                        const img = document.createElement('img')
-                        img.id = 'heart{{ spot.pk }}'
-                        img.alt = 'heart'
-                        img.width = 40
-                        img.height = 40
-
-                        if (result > {{ spot.likes }}) {
-                            img.src = '{% static 'images/full-heart.png' %}'
-                        } else {
-                            img.src = '{% static 'images/empty-heart.png' %}'
-                        }
-
-                        likeBtn.appendChild(img)
-                        like_counter.innerText = result
+                        like_counter.innerText = json['result']
                     },
-                    error: function(xhr, errmsg, err) {
+                    error: function (xhr, errmsg, err) {
                         console.log(errmsg)
                         console.log(err)
                     }
