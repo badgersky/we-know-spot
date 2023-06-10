@@ -48,7 +48,6 @@ class ListSpotsView(ListView):
     model = Spot
     template_name = 'spots/list-spots.html'
     context_object_name = 'spots'
-    paginate_by = 20
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
@@ -89,16 +88,13 @@ class SearchSpot(View):
             | Q(province__province_name__contains=tag)
             | Q(name__contains=tag)
         )))
-        paginator = Paginator(spots, 20)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
         context = {
-            'page_obj': page_obj,
+            'spots': spots,
             'liked_spots': [],
+            'search': tag,
         }
         if request.user.is_authenticated:
-            for spot in context['page_obj']:
+            for spot in spots:
                 if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
                     context['liked_spots'].append(spot.pk)
 
