@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -83,11 +84,17 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
+        spots = set(Spot.objects.filter(
+            Q(tags__tag_name__contains=tag)
+            | Q(province__province_name__contains=tag)
+            | Q(name__contains=tag)
+        ))
+        paginator = Paginator(spots, 20)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'spots': set(Spot.objects.filter(
-                Q(tags__tag_name__contains=tag) |
-                Q(province__province_name__contains=tag) |
-                Q(name__contains=tag))),
+            'page_obj': page_obj,
             'liked_spots': [],
         }
         if request.user.is_authenticated:
