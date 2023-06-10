@@ -84,11 +84,11 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
-        spots = set(Spot.objects.filter(
+        spots = list(set(Spot.objects.filter(
             Q(tags__tag_name__contains=tag)
             | Q(province__province_name__contains=tag)
             | Q(name__contains=tag)
-        ))
+        )))
         paginator = Paginator(spots, 20)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
@@ -98,7 +98,7 @@ class SearchSpot(View):
             'liked_spots': [],
         }
         if request.user.is_authenticated:
-            for spot in context['spots']:
+            for spot in context['page_obj']:
                 if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
                     context['liked_spots'].append(spot.pk)
 
