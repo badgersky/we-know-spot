@@ -64,17 +64,17 @@ class LikeSpot(LoginRequiredMixin, View):
     """view for liking spot"""
     login_url = reverse_lazy('users:login')
 
-    def get(self, request, pk):
-        spot = get_object_or_404(Spot, pk=pk)
+    def post(self, request):
+        spot = get_object_or_404(Spot, pk=int(request.POST.get('pk')))
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
-            spot.likes = F('likes') - 1
+            spot.likes -= 1
         else:
             SpotLike.objects.create(user=request.user, spot=spot)
-            spot.likes = F('likes') + 1
-            
+            spot.likes += 1
+
         spot.save()
-        return redirect(reverse('spots:list'))
+        return JsonResponse({'result': spot.likes})
 
 
 class SearchSpot(View):
