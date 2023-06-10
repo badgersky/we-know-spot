@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Permission
 from django.urls import reverse
 
 from spots.models import Spot, SpotLike
@@ -94,42 +93,46 @@ def test_list_spot_view(client, db, spots):
 
 
 def test_like_spot_view(client, db, user, spots):
-    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like')
     client.force_login(user)
     likes = Spot.objects.get(pk=spots[0].pk).likes
+    data = {
+        'pk': str(spots[0].pk)
+    }
 
-    redirect = client.get(url)
-    response = client.get(redirect.url)
+    response = client.post(url, data)
     likes_after = Spot.objects.get(pk=spots[0].pk).likes
 
-    assert redirect.status_code == 302
+    assert '{"result": 1}' in response.content.decode('utf-8')
     assert response.status_code == 200
     assert likes == likes_after - 1
     assert SpotLike.objects.filter(user=user, spot=spots[0]).exists() is True
 
 
 def test_dislike_spot_view(client, db, user, spots):
-    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like')
     spots[0].likes = 1
     SpotLike.objects.create(user=user, spot=spots[0])
     client.force_login(user)
     likes = Spot.objects.get(pk=spots[0].pk).likes
+    data = {
+        'pk': str(spots[0].pk)
+    }
 
-    redirect = client.get(url)
-    response = client.get(redirect.url)
+    response = client.post(url, data)
     likes_after = Spot.objects.get(pk=spots[0].pk).likes
 
-    assert redirect.status_code == 302
+    assert '{"result": -1}' in response.content.decode('utf-8')
     assert response.status_code == 200
     assert likes == likes_after + 1
     assert SpotLike.objects.filter(user=user, spot=spots[0]).exists() is False
 
 
 def test_like_spot_view_no_permission(client, db, spots):
-    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like')
     likes = Spot.objects.get(pk=spots[0].pk).likes
 
-    redirect = client.get(url)
+    redirect = client.post(url)
     response = client.get(redirect.url)
     likes_after = Spot.objects.get(pk=spots[0].pk).likes
 
@@ -140,10 +143,10 @@ def test_like_spot_view_no_permission(client, db, spots):
 
 
 def test_dislike_spot_view_no_permission(client, db, spots):
-    url = reverse('spots:like', kwargs={'pk': spots[0].pk})
+    url = reverse('spots:like')
     likes = Spot.objects.get(pk=spots[0].pk).likes
 
-    redirect = client.get(url)
+    redirect = client.post(url)
     response = client.get(redirect.url)
     likes_after = Spot.objects.get(pk=spots[0].pk).likes
 

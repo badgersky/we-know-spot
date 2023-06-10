@@ -10,6 +10,9 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag_name
 
+    class Meta:
+        ordering = ('tag_name',)
+
 
 class Province(models.Model):
     province_name = models.CharField(max_length=100)
@@ -18,6 +21,9 @@ class Province(models.Model):
 
     def __str__(self):
         return self.province_name
+
+    class Meta:
+        ordering = ('province_name',)
 
 
 class Spot(models.Model):

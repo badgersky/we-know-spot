@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, F
+from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
@@ -47,7 +47,6 @@ class ListSpotsView(ListView):
     model = Spot
     template_name = 'spots/list-spots.html'
     context_object_name = 'spots'
-    paginate_by = 20
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
@@ -64,17 +63,17 @@ class LikeSpot(LoginRequiredMixin, View):
     """view for liking spot"""
     login_url = reverse_lazy('users:login')
 
-    def get(self, request, pk):
-        spot = get_object_or_404(Spot, pk=pk)
+    def post(self, request):
+        spot = get_object_or_404(Spot, pk=int(request.POST.get('pk')))
         if SpotLike.objects.filter(user=request.user, spot=spot).exists():
             SpotLike.objects.get(user=request.user, spot=spot).delete()
-            spot.likes = F('likes') - 1
+            spot.likes -= 1
         else:
             SpotLike.objects.create(user=request.user, spot=spot)
-            spot.likes = F('likes') + 1
-            
+            spot.likes += 1
+
         spot.save()
-        return redirect(reverse('spots:list'))
+        return JsonResponse({'result': spot.likes})
 
 
 class SearchSpot(View):
@@ -83,15 +82,18 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
+        spots = set(Spot.objects.filter(
+            Q(tags__tag_name__icontains=tag)
+            | Q(province__province_name__icontains=tag)
+            | Q(name__icontains=tag)
+        ))
         context = {
-            'spots': set(Spot.objects.filter(
-                Q(tags__tag_name__contains=tag) |
-                Q(province__province_name__contains=tag) |
-                Q(name__contains=tag))),
+            'spots': spots,
             'liked_spots': [],
+            'search': tag,
         }
         if request.user.is_authenticated:
-            for spot in context['spots']:
+            for spot in spots:
                 if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
                     context['liked_spots'].append(spot.pk)
 
