@@ -83,11 +83,11 @@ class SearchSpot(View):
     def post(self, request):
         tag = request.POST.get('search')
 
-        spots = list(set(Spot.objects.filter(
-            Q(tags__tag_name__contains=tag)
-            | Q(province__province_name__contains=tag)
-            | Q(name__contains=tag)
-        )))
+        spots = set(Spot.objects.filter(
+            Q(tags__tag_name__icontains=tag)
+            | Q(province__province_name__icontains=tag)
+            | Q(name__icontains=tag)
+        ))
         context = {
             'spots': spots,
             'liked_spots': [],
