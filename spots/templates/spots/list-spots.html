@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    {% for spot in spots %}
+    {% for spot in page_obj %}
         <div class="card border-green mb-3 bg-dark">
             <img src="{{ spot.photo.url }}" class="card-img-top" alt="spot photo">
             <div class="card-body text-green border-top-green">
@@ -81,4 +81,25 @@
             <h2 class="text-green">No Spots</h2>
         </div>
     {% endfor %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    {{ page_obj.previous_page_number }}
+                </a></li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="">{{ page_obj.number }}</a></li>
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    {{ page_obj.next_page_number }}
+                </a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}

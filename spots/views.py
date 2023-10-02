@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -44,6 +45,7 @@ class CreateSpotView(LoginRequiredMixin, CreateView):
 class ListSpotsView(ListView):
     """lists all created spots"""
 
+    paginate_by = 25
     model = Spot
     template_name = 'spots/list-spots.html'
     context_object_name = 'spots'
@@ -85,20 +87,28 @@ class SearchSpot(View):
         if not tag:
             return redirect(reverse('spots:list'))
 
-        spots = set(Spot.objects.filter(
+        spots = (Spot.objects.filter(
             Q(tags__tag_name__icontains=tag)
             | Q(province__province_name__icontains=tag)
             | Q(name__icontains=tag)
         ))
         context = {
-            'spots': spots,
+            'page_obj': spots,
             'liked_spots': [],
             'search': tag,
         }
+
         if request.user.is_authenticated:
             for spot in spots:
                 if SpotLike.objects.filter(user=self.request.user, spot=spot).exists():
                     context['liked_spots'].append(spot.pk)
+
+        paginator = Paginator(spots, 25)
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
+        context['tag'] = tag
 
         return render(request, 'spots/list-spots.html', context)
 
