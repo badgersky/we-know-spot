@@ -8,7 +8,7 @@ from django.views import View
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 
 from spots.models import Spot, SpotLike
-from spots.permissions import OwnerRequiredMixin
+from spots.permissions import OwnerRequiredMixin, OwnerOrAdminRequiredMixin
 
 
 class CreateSpotView(LoginRequiredMixin, CreateView):
@@ -100,7 +100,7 @@ class SearchSpot(View):
         return render(request, 'spots/list-spots.html', context)
 
 
-class DeleteSpotView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
+class DeleteSpotView(LoginRequiredMixin, OwnerOrAdminRequiredMixin, DeleteView):
     """view for deleting spot"""
 
     model = Spot
