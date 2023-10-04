@@ -36,7 +36,7 @@ class Spot(models.Model):
     date_update = models.DateTimeField(auto_now=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=6)
     latitude = models.DecimalField(max_digits=8, decimal_places=6)
-    photo = models.ImageField(upload_to='spot-photos')
+    photo = models.ImageField(upload_to='spot-photos', blank=True)
 
     def __str__(self):
         return self.name
